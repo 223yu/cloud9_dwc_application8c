@@ -24,20 +24,10 @@
             <td><%= @group.name %></td>
             <td><%= @group.introduction %></td>
             <td id='member_list'>
-              <% @members.each do |member| %>
-                <p><%= member.name %></p>
-              <% end %>
+              <%= render 'member_list', members: @members %>
             </td>
-            <td>
-              <% if current_user.owned?(@group) %>
-                <%= link_to 'Edit', edit_group_path(@group), class:'btn btn-success' %>
-              <% else %>
-                <% if current_user.joined?(@group) %>
-                  <%= link_to 'Leave this group', group_user_path(@group.id), method: :delete, class:'btn btn-danger' %>
-                <% else %>
-                  <%= link_to 'Join this group', group_users_path(group_id: @group.id), method: :post,  class:'btn btn-success' %>
-                <% end %>
-              <% end %>
+            <td id='member_list_btn'>
+              <%= render 'member_list_btn', group: @group %>
             </td>
           </tr>
         </tbody>
