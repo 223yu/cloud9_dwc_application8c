@@ -55,4 +55,24 @@ class User < ApplicationRecord
     end
   end
 
+  #グループのオーナーであればtrueを返す
+  def owned?(group)
+    self.id == group.owner_id
+  end
+
+  #グループに所属する
+  def join(group)
+    groups << group
+  end
+
+  #グループから抜ける
+  def leave_group(group)
+    group_users.find_by(group_id: group.id).destroy
+  end
+
+  #ユーザがグループに所属していたらtrueを返す
+  def joined?(group)
+    groups.include?(group)
+  end
+
 end

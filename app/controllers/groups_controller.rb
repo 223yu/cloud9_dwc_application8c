@@ -2,7 +2,8 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find(params[:id])
-    @user = User.find(@group.owner_id)
+    @owner = User.find(@group.owner_id)
+    @members = @group.users
   end
 
   def index
@@ -18,6 +19,8 @@ class GroupsController < ApplicationController
     @group.owner_id = current_user.id
     @groups = Group.all
     if @group.save
+      user = User.find(@group.owner_id)
+      user.join(@group)
       redirect_to groups_path, notice: "You have created group successfully."
     else
       render 'new'
@@ -26,7 +29,7 @@ class GroupsController < ApplicationController
 
   def edit
     @group = Group.find(params[:id])
-    redirect_to groups_path unless @group.owner_id == current_user.id
+    redirect_to groups_path unless current_user.owned?(@group)
   end
 
   def update
